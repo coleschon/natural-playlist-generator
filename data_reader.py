@@ -32,8 +32,34 @@ class DataReader:
         print '                  Specifically desgin to display summary files'
         sys.exit(0)
 
-    # if __name__ == '__main__':
-    #     """ MAIN """
+    def append_files(self, letter):
+        path = '/Users/cole/eclipse-workspace/EC2 File Transfer/Data/' + letter + '/'
+        files = os.listdir(path)
+        import csv
+        with open('library_csv.csv', 'a') as library_csv:
+            writer = csv.writer(library_csv)
+            for filename in files:
+                hdf5path = path + filename
+                h5 = hdf5_getters.open_h5_file_read(hdf5path)
+                # get all getters
+                loudness = hdf5.get_loudness(h5)
+                key = hdf5.get_key(h5)
+                mode = hdf5.get_mode(h5)
+                tempo = hdf5.get_tempo(h5)
+                ts = hdf5.get_time_signature(h5)
+                title = hdf5.get_title(h5)
+                writer.writerow([loudness, key, mode, tempo, ts, title])
+                # print them
+                h5.close()
+            library_csv.close()
+
+    def reset_lib(self):
+        import csv
+        with open('library_csv.csv', 'w') as library_csv:
+            writer = csv.writer(library_csv)
+            writer.writerow(['Loudness', 'Key', 'Mode', 'Tempo', 'timeSignature', 'Title'])
+            library_csv.close()
+        print ("done")
 
     # help menu
     # if len(sys.argv) < 2:
